@@ -1,4 +1,4 @@
-#Web Drafter
+#Web-Drafter
 
 The Web Drafter is a pet project of mine where I try and learn the basics of JavaScript and jQuery.
 
