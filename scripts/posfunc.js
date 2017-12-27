@@ -9,11 +9,25 @@ function draw_lines(divname, draw, poly) {
     return draw;
 }
 
-function remove_polygon(poly, divname) {
-    var polyid = poly.id;
-    var p = SVG.get(polyid);
-    if(p)
-	p.remove();
+function update_polygon_list(polyarr) {
+    jQuery("#polylist").empty();
+    if(polyarr.length > 0) {
+	for(i = polyarr.length - 1; i >= 0; i--) {
+	    jQuery("#polylist").append(polyarr[i].id + "<br>");
+	}
+    }
+}
+
+function remove_polygon(polyarr) {
+    if(polyarr.length > 0) {
+	var poly = polyarr.pop();
+	var polyid = poly.id;
+	var p = SVG.get(polyid);
+	if(p)
+	    p.remove();
+	update_polygon_list(polyarr);
+    }
+    return polyarr;
 }
 
 function init_svg(divname) {

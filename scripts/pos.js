@@ -7,19 +7,31 @@ var ppos;
 var x, y;
 var drawing;
 var dotid = "dot";
-var curpol = new MyPolygon(1);
-var parr = [curpol];
+var curpol = null;
+var parr = [];
 
 jQuery(document).on("keydown", function(e) { 
-    if((e.metaKey && !e.ctrlKey && e.which == 90) || (e.ctrlKey && e.which == 90)) 
+    // UNDO
+    if((e.metaKey && !e.ctrlKey && e.which == 90) || (e.ctrlKey && e.which == 90)) {
 	drawing = undo_svg("picturebox", drawing, parr[parr.length - 1]);
+	if(clicknum > 0) {
+	    clicknum--;
+	    jQuery("#clicked_num").text(padnum("" + clicknum, 4));
+	}
+    }
+    // REMOVE POLYGON WITH HOTKEY "D"
     if(e.which == 68) {
-	remove_polygon(parr[parr.length - 1], "picturebox");
-	curpol.corslist = [];
+	parr = remove_polygon(parr);
+	clicknum = 0;
+	jQuery("#clicked_num").text(padnum("" + clicknum, 4));
     }
 });
 
 jQuery(document).on( "mousemove", function(event) {
+    coordinates(event);
+});
+
+function coordinates(event) {
     pcor = lcor.slice();
     lcor = mcors();
     var x = lcor[0];
@@ -27,41 +39,41 @@ jQuery(document).on( "mousemove", function(event) {
     if(pcor != lcor) {
 	var strx = "" + x;
 	var stry = "" + y;
-	if(stry < 0 || stry > jQuery("#picturebox").height() || strx < 0 || strx > jQuery("#picturebox").width()) {
-	    stry = 0;
-	    strx = 0;
+	if(y < 0 || y > jQuery("#picturebox").height() || x < 0 || x > jQuery("#picturebox").width()) {
+	    stry = "0000";
+	    strx = "0000";
 	}
-	jQuery("#mouse_y").text(padnum("" + stry, 4));
-	jQuery("#mouse_x").text(padnum("" + strx, 4));
+	jQuery("#mouse_y").text(padnum(stry, 4));
+	jQuery("#mouse_x").text(padnum(strx, 4));
 	draw_dot(mcors(), "picturebox", dotid, drawing);
     }
-});
+}
 
 jQuery(document).ready(function() {
     jQuery("#clicked_num").text(padnum("" + clicknum, 4));
     ppos = update_ppos();
     drawing = init_svg("picturebox");
 
-    jQuery("#picturebox").click(function() {
+    jQuery("#picturebox").on('click tap', function(event) {
+	coordinates(event);
+	if(clicknum == 0) {
+	    curpol = new MyPolygon(parr.length);
+	    parr.push(curpol);
+	}
+	clicknum++;
 	curpol.addcors(mcors());
 	if(clicknum > 0) {
             draw_lines("picturebox", drawing, parr[parr.length - 1]);
 	}
 	if(curpol.closed_path()) {
 	    // DO CLOSED PATH STUFF
-	    console.log("curpol " + curpol.id);
-	    curpol = new MyPolygon(++curpol.cnt);
-	    parr.push(curpol);
-	    jQuery("#polylist").empty();
-	    for(i = 0; i < parr.length - 1; i++) {
-		jQuery("#polylist").append("" + parr[i].id + "<br>");		
-	    }
-
+	    update_polygon_list(parr);
+	    clicknum = 0;
 	}
-	clicknum++;
 	var strclk = padnum("" + clicknum, 4);
 	jQuery("#clicked_num").text(strclk);
     });
+    
 });
 
 jQuery(window).resize(function() {
@@ -70,8 +82,4 @@ jQuery(window).resize(function() {
 
 jQuery('body').flowtype({
     fontRatio : 30
-});
-
-jQuery('#polylist').flowtype({
-    fontRatio : 70
 });

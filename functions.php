@@ -10,11 +10,11 @@ function get_html() {
 
 function get_body() {
 	 $retval = "";
-	 $retval .= get_databox();
-	 $retval .= get_html_breaks(5);
+	 $retval .= '<div class="wrapper">';
 	 $retval .= '<div id="picturebox" class="box"> </div>';
 	 $retval .= get_menu();
-
+	 $retval .= get_databox();
+	 $retval .= '</div>';
 	 return $retval;
 }
 
