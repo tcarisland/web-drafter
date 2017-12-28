@@ -15,6 +15,7 @@ function get_body() {
 	 $retval .= get_menu();
 	 $retval .= get_databox();
 	 $retval .= '</div>';
+	 $retval .= '<div id="overlay"></div>';
 	 return $retval;
 }
 

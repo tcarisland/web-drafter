@@ -9,10 +9,18 @@ body {
     color: white;
 }
 
+.polyentry {
+    cursor: pointer;
+    padding: 1px 1px 1px 1px;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-style: solid;
+    border-width: 1px;
+}
+
 .box {
     float: left;
     margin-left: 1rem;
-    padding: 2px 2px 2px 2px;
+    padding: 1px 1px 1px 1px;
     background-color: rgba(0,0,0, 0.5);
     border-style: solid;
     border-width: 1px;
@@ -21,13 +29,61 @@ body {
 
 .wrapper {
     position: absolute;
-    top: 1rem;
-    bottom: 1rem;
-    right: 1rem;
-    left: 1rem;
+    top: 1%;
+    bottom: 1%;
+    right: 1%;
+    left: 1%;
 }
 
-/*<div id="polylist" class="lbox"></div>*/
+.colorpicker {
+    margin-left: 1rem;
+    margin-top: 1rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background-color: #555;
+    border-style: solid;
+    border-color: rgb(255, 255, 255, 0.5);
+    border-width: 1px;
+    cursor: pointer;
+}
+
+.colorpickerdialog {
+    position: relative;
+    padding: 2rem 2rem 2rem 2rem;
+    margin: auto;
+    top: 10%;
+    height: 60%;
+    width: 60%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    border-style: solid;
+    border-width: 1px;
+}
+
+#overlay {
+    position: absolute; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.6); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+}
+
+#overlayexitbutton {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    z-index: 2;
+}
+
 .lbox {
     background-color: rgba(0, 0, 0, 0.3);
     border-width: 1px;
@@ -35,15 +91,17 @@ body {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+#colorbox {
+    margin: 0 0 1% 0;
+    padding: 1% 1% 1% 1%;
+    height: 30%;
+}
+
 #polylist {
-    margin: 0 0 0 0;
-    top: 1rem;
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
-    padding: 1rem 1rem 1rem 1rem;
+    margin: 0 0 1% 0;
+    padding: 1% 1% 1% 1%;
     overflow-y: scroll;
-    height: 200px;
+    height: 30%;
 }
 
 #menubox {
@@ -51,11 +109,12 @@ body {
     clear: right;
     width: 20%;
     height: 90%;
+    font-size: 1rem;
 }
 
 #databox {
     float: left;
-    margin-top: 1rem;
+    margin-top: 1%;
 }
 
 #picturebox {
@@ -63,5 +122,5 @@ body {
     background-color: white;
     width: 75%;
     height: 90%;
-    cursor: none;
+    cursor: crosshair;
 }
