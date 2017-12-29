@@ -2,19 +2,48 @@ html {
 
 }
 
+.polyremovebutton {
+    float: left;
+    margin-left: 1rem;
+    background-color: black;
+    color: #F00;
+    border-style: none;
+    cursor: pointer;
+    padding: 1px 3px 1px 3px;
+}
+
+.polyremovebutton:hover {
+    background-color: #AAA;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #FFF;
+}
+
+.polyremovebutton:active {
+    background-color: #FFF;
+    color: black;
+    outline-color: #F00;
+}
+
+
 body {
     font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
     font-size: 12px;
     background-color: #555;
-    color: white;
+    color: #FFF;
 }
 
 .polyentry {
+    float: left;
     cursor: pointer;
-    padding: 1px 1px 1px 1px;
-    border-color: rgba(255, 255, 255, 0.5);
-    border-style: solid;
-    border-width: 1px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.polyentry:hover {
+    background-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .box {
@@ -59,6 +88,7 @@ body {
     border-color: rgba(255, 255, 255, 0.5);
     border-style: solid;
     border-width: 1px;
+    overflow-y: scroll;
 }
 
 #overlay {
@@ -119,8 +149,9 @@ body {
 
 #picturebox {
     float: left;
-    background-color: white;
+    background-color: #FFF;
     width: 75%;
     height: 90%;
     cursor: crosshair;
 }
+

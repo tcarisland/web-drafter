@@ -58,16 +58,21 @@ function clickfunc(polyid, num) {
 }
 
 function polyselect(lineid, polyid, num) {
-    if(jQuery("#" + lineid).val() == "selected") {
+    if(typeof selected != 'undefined' && selected != null) {
+	jQuery("." + selected.lineid).val("unselected");
+	jQuery("." + selected.lineid).css("background-color", "transparent");
+	jQuery("." + selected.lineid).css("color", "white");
+    }
+    if(jQuery("." + lineid).val() == "selected") {
 	selected = null;
-	jQuery("#" + lineid).val("unselected");
-	jQuery("#" + lineid).css("background-color", "transparent");
-	jQuery("#" + lineid).css("color", "white");
+	jQuery("." + lineid).val("unselected");
+	jQuery("." + lineid).css("background-color", "transparent");
+	jQuery("." + lineid).css("color", "white");
     } else {
 	selected = parr[num];
-	jQuery("#" + lineid).css("background-color", "white");
-	jQuery("#" + lineid).css("color", "black");
-	jQuery("#" + lineid).val("selected");
+	jQuery("." + lineid).css("background-color", "white");
+	jQuery("." + lineid).css("color", "black");
+	jQuery("." + lineid).val("selected");
     }
 }
 
