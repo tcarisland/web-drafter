@@ -9,13 +9,17 @@ var drawing;
 var dotid = "dot";
 var curpol = null;
 var selected = null;
+var selected_color = new MyColor("#FFFF00", "#FF00FF", 0.5, 0.5);
 var parr = [];
+
+update_color(selected_color, "1px");
 
 jQuery(document).on("keydown", function(e) { 
     // UNDO
+
     if((e.metaKey && !e.ctrlKey && e.which == 90) || (e.ctrlKey && e.which == 90)) {
-	console.log("undo");
-	drawing = undo_svg("picturebox", drawing, parr, clicknum);
+		console.log("undo");
+		drawing = undo_svg("picturebox", drawing, parr, clicknum);
 	if(clicknum > 0) {
 	    clicknum--;
 	    jQuery("#clicked_num").text(padnum("" + clicknum, 4));
@@ -34,17 +38,17 @@ jQuery(document).on("keydown", function(e) {
     }
     // S 83
     if(e.which == 83) {
-	if(jQuery("#overlay").css('display') == 'none') {
-	    enable_overlay();
-	    if(selected == null) {
-		dialog_box("No polygon selected");
-	    } else {
-		dialog_box(selected.info());
-	    }
+		if(jQuery("#overlay").css('display') == 'none') {
+			enable_overlay();
+			if(selected == null) {
+			dialog_box("No polygon selected");
+			} else {
+			dialog_box(selected.info());
+			}
 
-	} else {
-	    disable_overlay();
-	}
+		} else {
+			disable_overlay();
+		}
     }
 });
 
@@ -53,22 +57,49 @@ jQuery(document).on( "mousemove", function(event) {
 });
 
 jQuery(document).ready(function() {
+
+	jQuery(document).on("change mousemove", ".fill_slider", function() {
+		selected_color.update_fill(jQuery(this).val(), jQuery(this).attr("id"));
+		var id = jQuery(this).attr("id");
+		//console.log(id + " " +jQuery(this).val());
+		if(id.substring(1, 2) == "r") {
+	        jQuery("#red_val").html(jQuery(this).val());
+        } else 	if(id.substring(1, 2) == "g") {
+            jQuery("#green_val").html(jQuery(this).val());
+        } else 	if(id.substring(1, 2) == "b") {
+            jQuery("#blue_val").html(jQuery(this).val());
+        }
+    });
+	jQuery(document).on("change mousemove", ".stroke_slider", function() {
+        selected_color.update_stroke(jQuery(this).val(), jQuery(this).attr("id"));
+        var id = jQuery(this).attr("id");
+        //console.log(id + " " +jQuery(this).val());
+        if(id.substring(1, 2) == "r") {
+            jQuery("#red_stroke_val").html(jQuery(this).val());
+        } else 	if(id.substring(1, 2) == "g") {
+            jQuery("#green_stroke_val").html(jQuery(this).val());
+        } else 	if(id.substring(1, 2) == "b") {
+            jQuery("#blue_stroke_val").html(jQuery(this).val());
+        }
+    });
     jQuery("#clicked_num").text(padnum("" + clicknum, 4));
     ppos = update_ppos();
     drawing = init_svg("picturebox");
+
     jQuery('.colorpicker').on('click', function(event) {
-	enable_overlay();
+		enable_overlay();
+		dialog_box(color_selector_form(selected_color));
     });
 
     jQuery("#picturebox").on('click', function(event) {
 	coordinates(event);
 	if(clicknum == 0) {
 	    if(parr.length > 0) {
-		curpol = new MyPolygon(parr.length, curpol);
+			curpol = new MyPolygon(parr.length, curpol, selected_color);
 	    } else {
-		curpol = new MyPolygon(0, null);
+			curpol = new MyPolygon(0, null, selected_color);
 	    }
-	    update_color(curpol);
+	    update_color(curpol.color, curpol.stroke_width);
 	    parr.push(curpol);
 	}
 	clicknum++;
@@ -82,9 +113,8 @@ jQuery(document).ready(function() {
 	    clicknum = 0;
 	}
 	var strclk = padnum("" + clicknum, 4);
-	jQuery("#clicked_num").text(strclk);
+		jQuery("#clicked_num").text(strclk);
     });
-    
 });
 
 jQuery(window).resize(function() {
@@ -92,6 +122,6 @@ jQuery(window).resize(function() {
 });
 
 jQuery('body').flowtype({
-    fontRatio : 30
+    fontRatio : 80
 });
 

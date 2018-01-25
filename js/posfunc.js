@@ -10,8 +10,8 @@ function enable_overlay() {
 
 function disable_overlay() {
   if(jQuery("#overlay").css('display') != 'none') { 
-            jQuery("#overlay").empty();
-            jQuery("#overlay").fadeOut("slow", function(){});
+    jQuery("#overlay").empty();
+    jQuery("#overlay").fadeOut("slow", function(){});
   }
 }
 
@@ -21,12 +21,34 @@ function dialog_box(data) {
     }
 }
 
+function color_selector_form(color) {
+    frgb = color.get_fill_rgb();
+    srgb = color.get_stroke_rgb();
+
+    var red_slider = "<input class='fill_slider' id='red_slider' value="+frgb[0]+" type=\"range\" min=\"0\" max=\"255\"> <br> <div id='rfval' >"+frgb[0]+"</div><br> ";
+    var green_slider = "<input class='fill_slider' id='green_slider' value="+frgb[1]+" type=\"range\" min=\"0\" max=\"255\"> <br> <div id='gfval' >"+frgb[1]+"</div><br>";
+    var blue_slider = "<input class='fill_slider' id='blue_slider' value="+frgb[2]+" type=\"range\" min=\"0\" max=\"255\"> <br> <div id='bfval' >"+frgb[2]+"</div><br>";
+    var fcbox = "<span id=\"fillbox\" style=\"background-color: "+color.fill+"; display: block; height: 50px; width: 50px;\">&nbsp</span>";
+
+    var red_stroke_slider = "<input class='stroke_slider' id='red_stroke_slider' value="+srgb[0]+" type=\"range\" min=\"0\" max=\"255\"> <br> <div id='rsval' >"+srgb[0]+"</div><br> ";
+    var green_stroke_slider = "<input class='stroke_slider' id='green_stroke_slider' value="+srgb[1]+" type=\"range\" min=\"0\" max=\"255\"> <br> <div id='gsval' >"+srgb[1]+"</div><br>";
+    var blue_stroke_slider = "<input class='stroke_slider' id='blue_stroke_slider' value="+srgb[2]+" type=\"range\" min=\"0\" max=\"255\"> <br> <div id='bsval' >"+srgb[2]+"</div><br>";
+    var scbox = "<span id=\"strokebox\" style=\"background-color: "+color.stroke+"; display: block; height: 50px; width: 50px;\">&nbsp</span>";
+
+    var retval = "<table><tr><td>Fill<br><br>";
+    retval += "Red: <br>" + red_slider + "Green: <br>" + green_slider + "Blue: <br>" + blue_slider + "<br>" + fcbox;
+    retval += "</td><td>&nbsp&nbsp&nbsp</td><td>Stroke<br><br>";
+    retval += "Red: <br>" + red_stroke_slider + "Green: <br>" + green_stroke_slider + "Blue: <br>" + blue_stroke_slider + "<br>" + scbox;
+    retval += "</td></tr></table>";
+    return retval;
+}
+
 function draw_lines(divname, draw, poly) {
     var pline = SVG.get(poly.id)
     var npline = draw.polyline(poly.corslist);
     npline = npline.id(poly.id);
-    npline = npline.stroke({ color: poly.stroke_color, opacity: poly.stroke_opcaity, width: poly.stroke_width });
-    npline = npline.fill({color: poly.color, opacity: poly.opacity})
+    npline = npline.stroke({ color: poly.color.stroke, opacity: poly.color.stroke_opacity, width: poly.stroke_width });
+    npline = npline.fill({color: poly.color.fill, opacity: poly.color.fill_opacity})
     if(pline) {
 	pline.replace(npline);
     }
@@ -59,27 +81,30 @@ function clickfunc(polyid, num) {
 
 function polyselect(lineid, polyid, num) {
     if(typeof selected != 'undefined' && selected != null) {
-	jQuery("." + selected.lineid).val("unselected");
-	jQuery("." + selected.lineid).css("background-color", "transparent");
-	jQuery("." + selected.lineid).css("color", "white");
+        jQuery("." + selected.lineid).val("unselected");
+        jQuery("." + selected.lineid).css("background-color", "transparent");
+        jQuery("." + selected.lineid).css("color", "white");
     }
     if(jQuery("." + lineid).val() == "selected") {
-	selected = null;
-	jQuery("." + lineid).val("unselected");
-	jQuery("." + lineid).css("background-color", "transparent");
-	jQuery("." + lineid).css("color", "white");
+        selected = null;
+        jQuery("." + lineid).val("unselected");
+        jQuery("." + lineid).css("background-color", "transparent");
+        jQuery("." + lineid).css("color", "white");
     } else {
-	selected = parr[num];
-	jQuery("." + lineid).css("background-color", "white");
-	jQuery("." + lineid).css("color", "black");
-	jQuery("." + lineid).val("selected");
+        selected = parr[num];
+        jQuery("." + lineid).css("background-color", "white");
+        jQuery("." + lineid).css("color", "black");
+        jQuery("." + lineid).val("selected");
     }
 }
 
-function update_color(poly) {
-    jQuery(".colorpicker").css("background-color", poly.color);
-    update_border_color(".colorpicker", poly.stroke_color);
-    update_border_width(".colorpicker", poly.stroke_width);
+function update_color(color, stroke_width) {
+    var rgba_fill = color.fill;
+    var rgba_stroke = color.stroke;
+    //console.log(rgba_fill + " " + rgba_stroke);
+    jQuery(".colorpicker").css("background-color", rgba_fill);
+    update_border_color(".colorpicker", rgba_stroke);
+    update_border_width(".colorpicker", stroke_width);
     update_border_style(".colorpicker", "solid");
 }
 
@@ -142,8 +167,8 @@ function draw_dot(cors, divname, dotid, draw) {
 
 function undo_svg(divname, draw, polyarr, clicknum) {
     if(clicknum > 0) {
-	curpol.corslist.pop();
-	return draw_lines(divname, draw, curpol);
+        curpol.corslist.pop();
+        return draw_lines(divname, draw, curpol);
     } else {
 	if(polyarr.length > 0) {
 	    remove_polygon(polyarr);
